@@ -108,8 +108,9 @@
 
     /* Completeness */
     // "skipDefaultLibCheck": true,                      /* Skip type checking .d.ts files that are included with TypeScript. */
-    "skipLibCheck": true                                 /* Skip type checking all .d.ts files. */
+    "skipLibCheck": true,                                /* Skip type checking all .d.ts files. */
+    "typeRoots": ["node_modules/@types", "src/types"]   /* Specify multiple folders that act like './node_modules/@types'. */
   },
-  "include": ["src"],         // รวมเฉพาะไฟล์ใน src/
-  "exclude": ["node_modules"]
+  "include": ["src/**/*"],    // รวมไฟล์ทั้งหมดใน src/ รวมถึง subdirectories
+  "exclude": ["node_modules", "dist"]
 }
