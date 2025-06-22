@@ -126,4 +126,10 @@ process.on('SIGTERM', async () => {
   }
 })
 
-startServer()
+if (process.env.NODE_ENV === 'production') {
+  // Export สำหรับ Vercel
+  module.exports = app;
+} else {
+  // รันเซิร์ฟเวอร์ปกติ
+  startServer();
+}
