@@ -1,6 +1,6 @@
 import bcrypt from 'bcryptjs'
 import { FastifyInstance } from 'fastify'
-import { User, CreateUserInput, UserResponse, userQueries } from '../models/userModel'
+import { CreateUserInput, UserResponse, userQueries } from '../models/userModel'
 import { generateToken } from '../utils/jwtUtils'
 
 export class UserService {
