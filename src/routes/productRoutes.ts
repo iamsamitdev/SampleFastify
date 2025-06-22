@@ -11,17 +11,80 @@ export async function productRoutes(fastify: FastifyInstance) {
   fastify.addHook('preHandler', authMiddleware)
 
   // Get all products
-  fastify.get('/products', productController.getAllProducts.bind(productController))
+  fastify.get('/products', {
+    schema: {
+      description: 'Get all products',
+      tags: ['Products'],
+      summary: 'Get All Products',
+      security: [{ bearerAuth: [] }],
+      response: {
+        200: {
+          type: 'object',
+          properties: {
+            success: { type: 'boolean' },
+            data: {
+              type: 'array',
+              items: {
+                type: 'object',
+                properties: {
+                  id: { type: 'integer' },
+                  name: { type: 'string' },
+                  description: { type: 'string' },
+                  price: { type: 'number' },
+                  category: { type: 'string' },
+                  created_at: { type: 'string', format: 'date-time' }
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  }, productController.getAllProducts.bind(productController))
 
   // Get product by ID
   fastify.get('/products/:id', {
     schema: {
+      description: 'Get product by ID',
+      tags: ['Products'],
+      summary: 'Get Product by ID',
+      security: [{ bearerAuth: [] }],
       params: {
         type: 'object',
         properties: {
-          id: { type: 'string', pattern: '^[0-9]+$' }
+          id: { 
+            type: 'string', 
+            pattern: '^[0-9]+$',
+            description: 'Product ID (numeric)'
+          }
         },
         required: ['id']
+      },
+      response: {
+        200: {
+          type: 'object',
+          properties: {
+            success: { type: 'boolean' },
+            data: {
+              type: 'object',
+              properties: {
+                id: { type: 'integer' },
+                name: { type: 'string' },
+                description: { type: 'string' },
+                price: { type: 'number' },
+                category: { type: 'string' },
+                created_at: { type: 'string', format: 'date-time' }
+              }
+            }
+          }
+        },
+        404: {
+          type: 'object',
+          properties: {
+            success: { type: 'boolean' },
+            message: { type: 'string' }
+          }
+        }
       }
     }
   }, productController.getProductById.bind(productController))

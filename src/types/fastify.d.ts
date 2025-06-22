@@ -8,8 +8,10 @@ declare module 'fastify' {
       end: () => Promise<void>
     }
   }
-  
-  interface FastifyRequest {
+    interface FastifyRequest {
+    requestId?: string
+    startTime?: number
+    routerPath?: string
     user?: {
       userId: number
       username: string
