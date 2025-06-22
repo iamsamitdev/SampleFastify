@@ -61,8 +61,8 @@ async function runMigration() {
     // Insert sample data
     const insertSampleUsers = `
       INSERT INTO users (username, password, fullname, email, tel) VALUES
-      ('admin', '$2a$10$N9qo8uLOickgx2ZMRZoMye/Eo9Pi4I4ywJOUKw7FGHjEyK9xL6jOy', 'Administrator', 'admin@example.com', '0800000000'),
-      ('testuser', '$2a$10$N9qo8uLOickgx2ZMRZoMye/Eo9Pi4I4ywJOUKw7FGHjEyK9xL6jOy', 'Test User', 'test@example.com', '0812345678')
+      ('admin', '$2a$10$c5588WRTwjs5e8IH216sMe1TzWgQLzUc9MiL/DTMBqlI269N5a8iW', 'Administrator', 'admin@example.com', '0800000000'),
+      ('testuser', '$2a$10$MesxH.kZRsefV0rUvCzoN.FVirLC1l73ZS7IP71Oxci0bjWe3M3vG', 'Test User', 'test@example.com', '0812345678')
       ON CONFLICT (username) DO NOTHING;
     `
 
