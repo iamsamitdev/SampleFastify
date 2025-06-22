@@ -9,7 +9,7 @@
     "migrate": "node database/migrate.js",
     "generate-password": "node scripts/generate-password.js",
     "test": "echo \"Error: no test specified\" && exit 1",
-    "vercel-build": "npm run build"
+    "vercel-build": "npx tsc"
   },
   "keywords": [],
   "author": "",

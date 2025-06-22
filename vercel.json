@@ -1,14 +1,12 @@
 {
   "version": 2,
+  "buildCommand": "npm install && npx tsc",
   "outputDirectory": "dist",
-  "installCommand": "npm install",
-  "buildCommand": "npm run build",
-  "devCommand": "npm run dev",
-  "framework": null,
+  "installCommand": "npm install --include=dev",
   "rewrites": [
     {
       "source": "/(.*)",
-      "destination": "/index.js"
+      "destination": "/api/index.js"
     }
   ],
   "env": {
