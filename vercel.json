@@ -1,8 +1,8 @@
 {
   "version": 2,
-  "buildCommand": "npm install && npx tsc",
+  "buildCommand": "npm run build",
+  "installCommand": "npm install",
   "outputDirectory": "dist",
-  "installCommand": "npm install --include=dev",
   "rewrites": [
     {
       "source": "/(.*)",
