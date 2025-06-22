@@ -3,16 +3,12 @@ require('dotenv').config()
 
 async function runMigration() {
   const connectionConfig = {
-    connectionString: process.env.DATABASE_URL || 
-      `postgresql://${process.env.DB_USER}:${process.env.DB_PASSWORD}@${process.env.DB_HOST}:${process.env.DB_PORT}/${process.env.DB_NAME}`
+     connectionString: process.env.DATABASE_URL || 
+      `postgresql://${process.env.DB_USER}:${process.env.DB_PASSWORD}@${process.env.DB_HOST}:${process.env.DB_PORT}/${process.env.DB_NAME}${
+        process.env.NODE_ENV === 'production' ? '?sslmode=require' : ''
+     }`
   };
 
-  // เพิ่ม SSL configuration สำหรับ production
-  if (process.env.NODE_ENV === 'production') {
-    connectionConfig.ssl = {
-      rejectUnauthorized: false
-    };
-  }
 
   const client = new Client(connectionConfig);
 
