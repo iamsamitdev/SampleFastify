@@ -4,12 +4,12 @@
   "main": "index.js",
   "scripts": {
     "dev": "nodemon --watch src --exec ts-node src/index.ts",
-    "build": "tsc",
+    "build": "./node_modules/.bin/tsc",
     "start": "node dist/index.js",
     "migrate": "node database/migrate.js",
     "generate-password": "node scripts/generate-password.js",
     "test": "echo \"Error: no test specified\" && exit 1",
-    "vercel-build": "tsc"
+    "vercel-build": "./node_modules/.bin/tsc"
   },
   "keywords": [],
   "author": "",
