@@ -4,12 +4,12 @@
   "main": "index.js",
   "scripts": {
     "dev": "nodemon --watch src --exec ts-node src/index.ts",
-    "build": "./node_modules/.bin/tsc",
+    "build": "tsc",
     "start": "node dist/index.js",
     "migrate": "node database/migrate.js",
     "generate-password": "node scripts/generate-password.js",
     "test": "echo \"Error: no test specified\" && exit 1",
-    "vercel-build": "./node_modules/.bin/tsc"
+    "vercel-build": "tsc"
   },
   "keywords": [],
   "author": "",
@@ -28,7 +28,8 @@
     "dotenv": "^16.5.0",
     "fastify": "^5.4.0",
     "jsonwebtoken": "^9.0.2",
-    "pg": "^8.12.0"
+    "pg": "^8.12.0",
+    "typescript": "^5.8.3"
   },
   "devDependencies": {
     "@types/bcryptjs": "^2.4.6",
@@ -36,7 +37,6 @@
     "@types/node": "^24.0.3",
     "@types/pg": "^8.11.6",
     "nodemon": "^3.1.10",
-    "ts-node": "^10.9.2",
-    "typescript": "^5.8.3"
+    "ts-node": "^10.9.2"
   }
 }
