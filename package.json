@@ -1,15 +1,23 @@
 {
   "name": "samplefastify",
   "version": "1.0.0",
-  "main": "index.js",
-  "scripts": {
+  "main": "index.js",  "scripts": {
     "dev": "nodemon --watch src --exec ts-node src/index.ts",
-    "build": "tsc",
+    "build": "./node_modules/.bin/tsc",
     "start": "node dist/index.js",
     "migrate": "node database/migrate.js",
     "generate-password": "node scripts/generate-password.js",
     "test": "echo \"Error: no test specified\" && exit 1",
-    "vercel-build": "tsc"
+    "vercel-build": "./node_modules/.bin/tsc",
+    
+    "docker:build": "docker build -t samplefastify:latest .",
+    "docker:run": "docker run -p 3000:3000 --env-file .env.docker samplefastify:latest",
+    "docker:dev": "docker-compose -f docker-compose.dev.yml up --build",
+    "docker:prod": "docker-compose up --build -d",
+    "docker:stop": "docker-compose down",
+    "docker:clean": "docker-compose down -v --rmi all",
+    "docker:logs": "docker-compose logs -f fastify_app",
+    "docker:db": "docker-compose exec postgres psql -U postgres -d fastify_app"
   },
   "keywords": [],
   "author": "",

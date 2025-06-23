@@ -1,0 +1,8 @@
+# SSL certificates directory
+# Place your SSL certificates here:
+# - server.crt
+# - server.key
+
+*.crt
+*.key
+*.pem

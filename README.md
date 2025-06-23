@@ -28,6 +28,14 @@
 - **🏗️ Clean Architecture**: โครงสร้างโค้ดที่เป็นระเบียบด้วย controllers, services, models
 - **🔄 Hot Reload**: การพัฒนาที่รวดเร็วด้วย nodemon
 
+### 🐳 Deployment & Infrastructure
+- **🐳 Docker Support**: Full Docker containerization พร้อม multi-stage builds
+- **🔄 Docker Compose**: Development และ Production environments
+- **🌐 Nginx Reverse Proxy**: Load balancing และ SSL termination
+- **☁️ Cloud Ready**: พร้อม deploy บน Vercel, AWS, Google Cloud, Azure
+- **📦 Redis Integration**: Caching และ session storage
+- **🔧 Auto-scaling**: Horizontal scaling support
+
 ## 📁 Project Structure
 
 ```
@@ -36,10 +44,25 @@ SampleFastify/
 ├── 📄 SWAGGER_GUIDE.md       # คู่มือการใช้งาน Swagger
 ├── 📄 SETUP_GUIDE.md         # คู่มือการติดตั้ง
 ├── 📄 MIGRATION_ADVANCED.md  # คู่มือ database migration
+├── 📄 DOCKER_GUIDE.md        # คู่มือการใช้งาน Docker
 ├── 📄 package.json           # ข้อมูลโปรเจ็กต์และ dependencies
 ├── 📄 tsconfig.json          # การตั้งค่า TypeScript
 ├── 📄 .env                   # Environment variables (ไม่อยู่ใน git)
 ├── 📄 env.example            # ตัวอย่าง environment variables
+├── 📄 .env.docker            # Environment สำหรับ Docker
+│
+├── 🐳 Docker Files           # Docker configuration
+│   ├── Dockerfile            # Production Docker build
+│   ├── Dockerfile.dev        # Development Docker build
+│   ├── docker-compose.yml    # Production Docker Compose
+│   ├── docker-compose.dev.yml # Development Docker Compose
+│   └── .dockerignore         # Docker ignore file
+│
+├── 🌐 nginx/                 # Nginx reverse proxy
+│   ├── nginx.conf            # Nginx configuration
+│   └── ssl/                  # SSL certificates directory
+│
+├── 📝 logs/                  # Application logs
 │
 ├── 🗂️ src/                   # Source code หลัก
 │   ├── 📄 index.ts           # Entry point ของแอปพลิเคชัน
@@ -176,6 +199,22 @@ npm run dev
 - แสดง configuration ปัจจุบัน
 - รันที่ `http://localhost:3000`
 
+### 🐳 Docker Development Mode (แนะนำสำหรับ team development)
+```powershell
+# รัน development environment พร้อม PostgreSQL และ Redis
+npm run docker:dev
+
+# ดู logs ของทุก services
+docker-compose -f docker-compose.dev.yml logs -f
+
+# หยุด development environment
+docker-compose -f docker-compose.dev.yml down
+```
+- รันพร้อม PostgreSQL และ Redis containers
+- มี hot-reload ผ่าน volume mounting
+- แยก environment จาก local machine
+- รันที่ `http://localhost:3000`
+
 ### 🚀 Production Mode
 ```powershell
 # 1. Build โปรเจ็กต์
@@ -185,10 +224,38 @@ npm run build
 npm start
 ```
 
+### 🐳 Docker Production Mode
+```powershell
+# รัน production environment พร้อม Nginx, PostgreSQL และ Redis
+npm run docker:prod
+
+# ดู logs ของ production environment
+npm run docker:logs
+
+# หยุด production environment
+npm run docker:stop
+
+# ลบ containers และ volumes
+npm run docker:clean
+```
+- รันพร้อม Nginx reverse proxy
+- มี PostgreSQL และ Redis containers
+- Production optimized builds
+- รันที่ `http://localhost` (ผ่าน Nginx) หรือ `http://localhost:3000` (direct)
+
 ### 🎯 คำสั่งเพิ่มเติม
 ```powershell
 # ทดสอบการเชื่อมต่อฐานข้อมูล
 npm run migrate
+
+# เข้าถึงฐานข้อมูลใน Docker
+npm run docker:db
+
+# Build Docker image
+npm run docker:build
+
+# Run single Docker container
+npm run docker:run
 
 # สร้าง JWT secret ใหม่
 npm run generate-password
@@ -670,6 +737,95 @@ Invoke-RestMethod -Uri "http://localhost:3000/api/env/config" -Headers @{
 
 ## 🚀 Production Deployment
 
+### 🐳 Docker Deployment (แนะนำ)
+
+#### **Local Docker Production**
+```powershell
+# รัน production environment พร้อม Nginx
+npm run docker:prod
+
+# ตรวจสอบสถานะ containers
+docker-compose ps
+
+# ดู logs
+npm run docker:logs
+```
+
+#### **Docker Swarm**
+```powershell
+# Initialize swarm
+docker swarm init
+
+# Deploy stack
+docker stack deploy -c docker-compose.yml fastify-stack
+```
+
+#### **Kubernetes**
+```yaml
+# kubernetes-deployment.yaml
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: fastify-app
+spec:
+  replicas: 3
+  selector:
+    matchLabels:
+      app: fastify-app
+  template:
+    metadata:
+      labels:
+        app: fastify-app
+    spec:
+      containers:
+      - name: fastify-app
+        image: samplefastify:latest
+        ports:
+        - containerPort: 3000
+```
+
+### ☁️ Cloud Platform Deployment
+
+#### **Vercel (Serverless)**
+```powershell
+# Install Vercel CLI
+npm i -g vercel
+
+# Deploy
+vercel --prod
+
+# ตั้งค่า environment variables ใน Vercel Dashboard
+```
+
+#### **Railway**
+```powershell
+# Install Railway CLI
+npm i -g @railway/cli
+
+# Login และ deploy
+railway login
+railway init
+railway up
+```
+
+#### **Google Cloud Run**
+```powershell
+# Build และ push to Google Container Registry
+docker build -t gcr.io/your-project/samplefastify .
+docker push gcr.io/your-project/samplefastify
+
+# Deploy to Cloud Run
+gcloud run deploy --image gcr.io/your-project/samplefastify
+```
+
+#### **AWS ECS/Fargate**
+```powershell
+# Push to ECR
+aws ecr get-login-password --region us-east-1 | docker login --username AWS --password-stdin your-account.dkr.ecr.us-east-1.amazonaws.com
+docker tag samplefastify:latest your-account.dkr.ecr.us-east-1.amazonaws.com/samplefastify:latest
+docker push your-account.dkr.ecr.us-east-1.amazonaws.com/samplefastify:latest
+```
+
 ### 🌐 การ Deploy บน Cloud Platforms
 
 #### **Heroku**
@@ -699,19 +855,6 @@ railway up
 ```powershell
 # Deploy ผ่าน GitHub integration
 # ตั้งค่า environment variables ใน dashboard
-```
-
-### 🐳 Docker Support (สามารถเพิ่มได้)
-
-#### Dockerfile ตัวอย่าง:
-```dockerfile
-FROM node:18-alpine
-WORKDIR /app
-COPY package*.json ./
-RUN npm ci --only=production
-COPY dist ./dist
-EXPOSE 3000
-CMD ["node", "dist/index.js"]
 ```
 
 ### ⚙️ Production Configuration
@@ -758,11 +901,14 @@ CORS_CREDENTIALS=true
 - **[SWAGGER_GUIDE.md](./SWAGGER_GUIDE.md)** - คู่มือการใช้งาน Swagger อย่างละเอียด
 - **[SETUP_GUIDE.md](./SETUP_GUIDE.md)** - คู่มือการติดตั้งและตั้งค่า
 - **[MIGRATION_ADVANCED.md](./MIGRATION_ADVANCED.md)** - คู่มือ database migration ขั้นสูง
+- **[DOCKER_GUIDE.md](./DOCKER_GUIDE.md)** - คู่มือการใช้งาน Docker และ Docker Compose
 
 ### 🔗 แหล่งข้อมูลภายนอก
 - **[Fastify Documentation](https://www.fastify.io/docs/latest/)**
 - **[PostgreSQL Documentation](https://www.postgresql.org/docs/)**
 - **[JWT.io](https://jwt.io/)** - สำหรับทดสอบและ debug JWT tokens
+- **[Docker Documentation](https://docs.docker.com/)** - คู่มือ Docker
+- **[Docker Compose](https://docs.docker.com/compose/)** - คู่มือ Docker Compose
 
 ## 🤝 การร่วมพัฒนา
 
@@ -770,10 +916,12 @@ CORS_CREDENTIALS=true
 
 1. **Fork และ Clone repository**
 2. **สร้าง feature branch**: `git checkout -b feature/new-feature`
-3. **เขียน code และ tests**
-4. **ตรวจสอบ TypeScript**: `npx tsc --noEmit`
-5. **Commit และ Push**: `git push origin feature/new-feature`
-6. **สร้าง Pull Request**
+3. **ใช้ Docker development environment**: `npm run docker:dev`
+4. **เขียน code และ tests**
+5. **ตรวจสอบ TypeScript**: `npx tsc --noEmit`
+6. **ทดสอบ production build**: `npm run docker:prod`
+7. **Commit และ Push**: `git push origin feature/new-feature`
+8. **สร้าง Pull Request**
 
 ### 📝 Code Standards
 
@@ -782,6 +930,24 @@ CORS_CREDENTIALS=true
 - ใช้ **PascalCase** สำหรับ classes และ interfaces
 - เขียน **JSDoc comments** สำหรับ public functions
 - ใช้ **async/await** แทน Promises
+- ใช้ **Docker** สำหรับ consistent development environment
+
+### 🐳 Development Environment Options
+
+#### **Local Development**
+```bash
+npm run dev
+```
+
+#### **Docker Development (แนะนำสำหรับ team)**
+```bash
+npm run docker:dev
+```
+
+#### **Production Testing**
+```bash
+npm run docker:prod
+```
 
 ## 📄 License
 
@@ -804,4 +970,6 @@ CORS_CREDENTIALS=true
 
 **Made with ❤️ using Fastify Framework**  
 **🛡️ Secured with Rate Limiting, CORS, และ Security Headers**  
-**📊 Monitored with Real-time Performance Tracking**
+**📊 Monitored with Real-time Performance Tracking**  
+**🐳 Containerized with Docker & Docker Compose**  
+**☁️ Cloud-Ready for Multiple Deployment Options**

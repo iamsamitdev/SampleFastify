@@ -1,0 +1,40 @@
+node_modules
+npm-debug.log
+dist
+.git
+.gitignore
+README.md
+.env
+.env.local
+.env.development
+.env.production
+.nyc_output
+coverage
+.vscode
+.idea
+*.log
+.DS_Store
+Thumbs.db
+
+# Development files
+src/**/*.test.ts
+src/**/*.spec.ts
+tests/
+coverage/
+.coverage/
+
+# Documentation
+docs/
+*.md
+!README.md
+
+# CI/CD
+.github/
+.travis.yml
+.circleci/
+azure-pipelines.yml
+
+# Vercel
+.vercel/
+vercel.json
+api/
